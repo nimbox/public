@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+
+    redis:
+        image: 'redis:5'
+        restart: unless-stopped
+        ports:
+            - '6379:6379'
+        volumes: 
+            - data:/data
+
+    postgres:
+        image: 'postgres:13'
+        restart: unless-stopped
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - PGDATA=/data/postgres
+        ports:
+            - '5432:5432'
+        volumes:
+            - data:/data
+
+    controller:
+        image: 'ghcr.io/nimbox/canexer-controller:main'
+        restart: unless-stopped
+        environment:
+            - VPNFORWARD=80:server:8080,5432:postgres:5432
+        volumes: 
+            - data:/data
+        cap_add:
+            - NET_ADMIN
+        devices:
+            - /dev/net/tun
+
+    server:
+        image: 'ghcr.io/nimbox/canexer-server:test'
+        restart: unless-stopped
+        environment:
+            - CANEXER_PORT=8080
+            - CANEXER_DATA=/data
+            - CANEXER_STORE_URL=redis://redis:6379
+            - CANEXER_STORE_PASSWORD=
+            - CANEXER_DATABASE_URL=postgresql://postgres:5432/postgres
+            - CANEXER_DATABASE_USERNAME=postgres
+            - CANEXER_DATABASE_PASSWORD=postgres
+            - CANEXER_DATABASE_WRITER_URL=postgresql://postgres:5432/canexer
+            - CANEXER_DATABASE_WRITER_USERNAME=writer
+            - CANEXER_DATABASE_WRITER_PASSWORD=writer
+            - CANEXER_DATABASE_READER_URL=postgresql://postgres:5432/canexer
+            - CANEXER_DATABASE_READER_USERNAME=reader
+            - CANEXER_DATABASE_READER_PASSWORD=reader
+        volumes: 
+            - data:/data
+        ports:
+            - '80:8080'
+        depends_on:
+            - redis
+            - postgres
+            - controller
+
+volumes:
+    data:
