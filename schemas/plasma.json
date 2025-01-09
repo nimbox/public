@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://nimbox.com/plasma.json",
+    "$id": "https://raw.githubusercontent.com/nimbox/public/main/schemas/plasma.json",
     "title": "Plasma Tables Schema",
     "description": "A schema to validate the structure of plasma tables and columns.",
     "type": "object",
