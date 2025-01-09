@@ -31,7 +31,7 @@
                   },
                   "type": {
                     "type": "string",
-                    "enum": ["ID", "STRING", "BOOLEAN", "INTEGER", "LONG", "FLOAT", "DECIMAL", "INSTANT", "LOCALDATE", "LOCALDATETIME", "JSON"]
+                    "enum": ["ID", "STRING", "BOOLEAN", "INTEGER", "LONG", "FLOAT", "DOUBLE", "DECIMAL", "INSTANT", "LOCALDATE", "LOCALDATETIME", "JSON"]
                   },
                   "required": {
                     "type": "boolean"
